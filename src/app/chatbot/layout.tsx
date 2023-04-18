@@ -3,5 +3,5 @@ export default async function ChatbotLayout({children}: {children: React.ReactNo
         <div className="w-screen h-screen min-h-screen">
             {children}
         </div>
-    )
+    );
 }

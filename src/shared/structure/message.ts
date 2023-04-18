@@ -1,9 +1,9 @@
-export const Role = {
+export const RoleConst = {
     USER: 'USER',
     ASSISTANT: 'ASSISTANT',
 } as const;
 
-export type Role = (typeof Role)[keyof typeof Role];
+export type Role = (typeof RoleConst)[keyof typeof RoleConst];
 
 interface MessageBase {
     conversationId: string;

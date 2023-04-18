@@ -1,4 +1,4 @@
-import Welcome from "./modules/Welcome";
+import Welcome from './modules/Welcome';
 
 export default async function Chatbot() {
     return (
@@ -8,5 +8,5 @@ export default async function Chatbot() {
                 <Welcome />
             </div>
         </div>
-    )
+    );
 }

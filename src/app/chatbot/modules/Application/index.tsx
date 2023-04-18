@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import { Application, Conversation } from '@/shared/structure';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ApplicationContextProvider } from './ApplicationContextProvider';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {Application, Conversation} from '@/shared/structure';
+import {ApplicationContextProvider} from './ApplicationContextProvider';
 import Conversations from './Conversations';
 import Chat from './Chat';
 
-function Sidebar ({children}: {children: React.ReactNode}) {
+function Sidebar({children}: {children: React.ReactNode}) {
     return (
-        <div className=''>
+        <div className="">
             {children}
         </div>
-    )
+    );
 }
 
 interface Props {
@@ -26,7 +26,7 @@ export default function ApplicationApp({application, conversations}: Props) {
         <QueryClientProvider client={queryClient}>
             <ApplicationContextProvider application={application}>
                 <p>{application.description}</p>
-                <div className='flex'>
+                <div className="flex">
                     <Sidebar>
                         {
                             conversations.length > 0 ? <Conversations conversations={conversations} /> : <p>暂无会话</p>
@@ -38,5 +38,5 @@ export default function ApplicationApp({application, conversations}: Props) {
                 </div>
             </ApplicationContextProvider>
         </QueryClientProvider>
-    )
+    );
 }

@@ -1,20 +1,16 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
-import { Button, Input, Skeleton } from 'antd';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useApplicationContext } from './ApplicationContextProvider';
-import { createConversation, createMessage, getMessagesByConversationId } from '../../interfaces';
-import { useImmer } from 'use-immer';
-import { Message, Role } from '@/shared/structure';
+import React, {useCallback, useState} from 'react';
+import {Button, Input, Skeleton} from 'antd';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useImmer} from 'use-immer';
+import {Message, RoleConst} from '@/shared/structure';
+import {createConversation, createMessage, getMessagesByConversationId} from '../../interfaces';
+import {useApplicationContext} from './ApplicationContextProvider';
 
-interface ChatProps {
-    conversationId?: string
-}
-
-export default function Chat (props: ChatProps) {
+export default function Chat() {
     const {application} = useApplicationContext();
-    const {conversationId, setContextConversationId} = useApplicationContext()
+    const {conversationId, setContextConversationId} = useApplicationContext();
     const [messages, setMessages] = useImmer<Message[]>([]);
     const [inputValue, setInputValue] = useState('');
 
@@ -24,9 +20,9 @@ export default function Chat (props: ChatProps) {
         {
             onSuccess(data) {
                 if (data.length) {
-                    setMessages(data)
+                    setMessages(data);
                 }
-            }
+            },
         }
     );
 
@@ -48,17 +44,17 @@ export default function Chat (props: ChatProps) {
                 const {conversationId} = await createConversationMutation.mutateAsync({
                     prompt: message,
                     applicationId: application.applicationId,
-                })
+                });
 
                 tmpConversationId = conversationId;
-                queryClient.invalidateQueries({ queryKey: ['conversationList'] })
+                queryClient.invalidateQueries({queryKey: ['conversationList']});
                 setContextConversationId(tmpConversationId);
             }
 
             const newMessage = {
                 content: message,
-                role: Role.USER,
-                conversationId: tmpConversationId!
+                role: RoleConst.USER,
+                conversationId: tmpConversationId!,
             };
 
             setMessages(messages => {
@@ -68,22 +64,30 @@ export default function Chat (props: ChatProps) {
             const replyResponse = await createMessageMutation.mutateAsync({
                 content: message,
                 conversationId: tmpConversationId!,
-                role: Role.USER,
-                applicationType: application.type
+                role: RoleConst.USER,
+                applicationType: application.type,
             }); // yiyanresponse
 
             const replyMessage = {
                 content: replyResponse.content,
                 conversationId: tmpConversationId!,
-                role: Role.ASSISTANT,
-            }
+                role: RoleConst.ASSISTANT,
+            };
 
             setMessages(messages => {
                 messages.push(replyMessage);
             });
         },
-        [application, conversationId, createConversationMutation, createMessageMutation, inputValue, queryClient, setContextConversationId, setMessages]
-    )
+        [
+            application,
+            conversationId,
+            createConversationMutation,
+            createMessageMutation,
+            inputValue, queryClient,
+            setContextConversationId,
+            setMessages,
+        ]
+    );
 
     if (getHistoryMessageQuery.isLoading) {
         return <Skeleton />;
@@ -93,11 +97,12 @@ export default function Chat (props: ChatProps) {
         <>
             {
                 messages.map((message, index) => {
+                    // eslint-disable-next-line react/no-array-index-key
                     return <pre key={index}>{message.content}</pre>;
                 })
             }
             <Input.TextArea onChange={e => setInputValue(e.target.value)} value={inputValue} />
-            <Button htmlType='submit' onClick={handleMessageSubmit}>提交</Button>
+            <Button htmlType="submit" onClick={handleMessageSubmit}>提交</Button>
         </>
-    )
+    );
 }
