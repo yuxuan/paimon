@@ -1,0 +1,6 @@
+{
+  "assets": {
+    "includes": [".next/static/**", ".next/server/**/*.html"],
+    "excludes": []
+  }
+}  
