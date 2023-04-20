@@ -15,7 +15,7 @@ export async function DELETE(request: NextRequest, params: {params: {id: string}
 
     cleanMessagesFromConversation(id);
 
-    const data = await doDelete(`process.env.SERVICE_BASE_URL/api/v1/conversations/${id}`);
+    const data = await doDelete(`${process.env.SERVICE_BASE_URL}/api/v1/conversations/${id}`);
 
     const response: ServerResponse = {data};
     return NextResponse.json(response);
