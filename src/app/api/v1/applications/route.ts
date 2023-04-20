@@ -3,7 +3,7 @@ import {CreateApplicationDto, saveApplicationToDb} from '@/service/applicaiton';
 import {get} from '@/shared/fetch';
 
 export async function GET() {
-    const data = await get('http://localhost:3002/api/v1/applications/');
+    const data = await get(`${process.env.SERVICE_BASE_URL}/api/v1/applications/`);
     return NextResponse.json({
         data,
         message: 'success',

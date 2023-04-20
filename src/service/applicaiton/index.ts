@@ -9,6 +9,6 @@ export interface CreateApplicationDto {
 
 export const saveApplicationToDb = (application: CreateApplicationDto) =>
     post<CreateApplicationDto, Application>(
-        'http://localhost:3002/api/v1/applications',
+        `${process.env.SERVICE_BASE_URL}/api/v1/applications`,
         application
     );

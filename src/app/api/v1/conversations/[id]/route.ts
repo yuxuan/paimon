@@ -5,7 +5,7 @@ import {cleanMessagesFromConversation} from '@/store/message';
 
 export async function GET(request: NextRequest, params: {params: {id: string}}) {
     const {id} = params.params;
-    const data = await get('http://localhost:3002/api/v1/conversations', {id});
+    const data = await get(`${process.env.SERVICE_BASE_URL}/api/v1/conversations`, {id});
     const response: ServerResponse = {data};
     return NextResponse.json(response);
 }
@@ -15,7 +15,7 @@ export async function DELETE(request: NextRequest, params: {params: {id: string}
 
     cleanMessagesFromConversation(id);
 
-    const data = await doDelete(`http://localhost:3002/api/v1/conversations/${id}`);
+    const data = await doDelete(`process.env.SERVICE_BASE_URL/api/v1/conversations/${id}`);
 
     const response: ServerResponse = {data};
     return NextResponse.json(response);

@@ -6,7 +6,7 @@ function updateYiyanTokenDB(accessToken: string) {
         accessToken,
         description: '文心一言',
     };
-    fetch('http://localhost:3002/api/v1/applications/', {
+    fetch(`${process.env.SERVICE_BASE_URL}/api/v1/applications/`, {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: {

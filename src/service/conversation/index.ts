@@ -8,6 +8,6 @@ export interface SaveConversationDto {
 }
 
 export const saveConversationToDb = (conversation: SaveConversationDto) => post<SaveConversationDto, Conversation>(
-    'http://localhost:3002/api/v1/conversations',
+    `${process.env.SERVICE_BASE_URL}/api/v1/conversations`,
     conversation
 );

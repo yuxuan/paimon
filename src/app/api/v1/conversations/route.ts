@@ -9,7 +9,7 @@ export const GET = async (request: NextRequest) => {
     const {query} = queryString.parseUrl(request.url);
     const queryUrl = query ? `?${queryString.stringify(query)}` : '';
     const data = await get(
-        `http://localhost:3002/api/v1/conversations${queryUrl}`,
+        `${process.env.SERVICE_BASE_URL}/api/v1/conversations${queryUrl}`,
         {},
         {next: {revalidate: 0}}
     );

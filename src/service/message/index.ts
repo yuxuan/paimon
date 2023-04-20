@@ -8,12 +8,12 @@ interface GetConversationMessagesDto {conversationId: string}
 
 export const saveMessageToDb = (message: CreateMessageDto) =>
     post<CreateMessageDto, Message>(
-        'http://localhost:3002/api/v1/messages',
+        `${process.env.SERVICE_BASE_URL}/api/v1/messages`,
         message
     );
 
 export const getMessagesByConversationId = (conversationId: string) =>
     get<GetConversationMessagesDto, Message[]>(
-        'http://localhost:3002/api/v1/messages',
+        `${process.env.SERVICE_BASE_URL}/api/v1/messages`,
         {conversationId}
     );

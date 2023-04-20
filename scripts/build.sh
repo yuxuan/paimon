@@ -3,9 +3,9 @@ set -e
 
 echo 'build start'
 
-yarn install --frozen-lockfile --registry=http://registry.npm.baidu-int.com
+pnpm install --frozen-lockfile --registry=http://registry.npm.baidu-int.com
 
-yarn build
+pnpm build
 
 # 复制 .next 目录下的产出到 output 目录下
 rm -rf output
