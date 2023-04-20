@@ -7,7 +7,8 @@ export const getMessagesByConversationId = async (conversationId: string | null)
     if (!conversationId) {
         return [];
     }
-    return get<unknown, Message[]>('http://localhost:3000/api/v1/messages', {conversationId});
+    return get<unknown, Message[]>(`${process.env.API_BASE_URL}/api/v1/messages`, {conversationId});
 };
 
-export const createMessage = (message: CreateMessageDto) => post<CreateMessageDto, {content: string}>('http://localhost:3000/api/v1/messages', message);
+export const createMessage = (message: CreateMessageDto) =>
+    post<CreateMessageDto, {content: string}>(`${process.env.API_BASE_URL}/api/v1/messages`, message);

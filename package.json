@@ -5,9 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "server-start": "nodemon --watch server --exec ts-node service/index.ts"
+    "start": "next start -p 8001",
+    "lint": "next lint"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -45,6 +44,7 @@
     "autoprefixer": "^10.4.14",
     "eslint": "^8.19.4",
     "eslint-plugin-import": "^2.27.5",
+    "nodemon": "^2.0.22",
     "postcss": "^8.4.21",
     "react-is": "^18.2.0",
     "styled-components": "^5.3.9",
