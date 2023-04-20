@@ -5,7 +5,7 @@ import Application from '../../modules/Application';
 export default async function ApplicationPage({params}: {params: {id: string}}) {
     const {id} = params;
     const application = await fetch(
-        `${process.env.API_BASE_URL}/api/v1/applications/${id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/applications/${id}`,
         {
             // cache: 'force-cache',
             cache: 'no-store',
