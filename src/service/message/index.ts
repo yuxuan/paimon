@@ -2,7 +2,7 @@ import {get, post} from '@/shared/fetch';
 import {ApplicationType, Message} from '@/shared/structure';
 
 
-export type CreateMessageDto = Omit<Message & {applicationType?: ApplicationType}, 'messageId'>;
+export type CreateMessageDto = Omit<Message & {applicationType?: ApplicationType, applicationId?: string}, 'messageId'>;
 
 interface GetConversationMessagesDto {conversationId: string}
 

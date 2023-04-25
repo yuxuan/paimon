@@ -34,15 +34,16 @@ export const GET = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
     const token = request.cookies.get('token')?.value;
+    const requestBody = await request.json();
+    const {content, conversationId, role, applicationId, applicationType} = requestBody;
 
     if (!token) {
-        redirect('/no-token');
+        return NextResponse.json({message: `no token ${applicationId}`}, {
+            status: 401,
+        });
     }
 
-    const requestBody = await request.json();
-    const {content, conversationId, role} = requestBody;
     const message = {content, role, conversationId};
-    const applicationType = requestBody.applicationType;
 
     updateMessageToConversation(conversationId, message);
 

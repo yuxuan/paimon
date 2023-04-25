@@ -7,7 +7,7 @@ export async function getApplications() {
     return data;
 }
 
-export const getApplication = async (id: string, options: any) => {
+export const getApplication = async (id: string, options?: any) => {
     const data = await get<unknown, Application>(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/applications/${id}`,
         {},

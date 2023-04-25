@@ -7,12 +7,10 @@ export function get<Params extends unknown, Response>(
 ) {
     const query = params && queryString.stringify(params);
     const fetchUrl = url + (query ? `?${query}` : '');
-    return fetch(fetchUrl, options)
+    // 就不要cache，求求了
+    return fetch(fetchUrl, {...options, next: {revalidate: 0}})
         .then(
             res => {
-                if (!res.ok) {
-                    throw res;
-                }
                 return res.json();
             })
         .then(({data}) => data as Response);
@@ -31,14 +29,16 @@ export async function post<Payload extends Record<string, any>, Response>(
         },
         ...options,
     })
-        .then(
-            res => {
-                if (!res.ok) {
-                    throw res;
-                }
-                return res.json();
-            })
-        .then(({data}) => data as Response);
+        .then(async res => {
+            const response = await res.json();
+            if (res.ok) {
+                return response;
+            }
+            throw {code: res.status, message: 'error', ...response};
+        })
+        .then(({data}) => {
+            return data as Response;
+        });
 }
 
 export async function doDelete<Params extends Record<string, any>, Response>(

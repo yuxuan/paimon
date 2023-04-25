@@ -67,7 +67,8 @@ export default function Chat() {
                 conversationId: tmpConversationId!,
                 role: RoleConst.USER,
                 applicationType: application.type,
-            }); // yiyanresponse
+                applicationId: application.applicationId,
+            });
 
             const replyMessage = {
                 content: replyResponse.content,
