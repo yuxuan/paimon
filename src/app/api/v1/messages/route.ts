@@ -1,4 +1,3 @@
-import {redirect} from 'next/navigation';
 import {NextRequest, NextResponse} from 'next/server';
 import queryString from 'query-string';
 import {getMessagesByConversationId, saveMessageToDb} from '@/service/message';

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import {Message as TypeMessage, ApplicationType} from '@/shared/structure';
 import yiyanAvatar from '../../../../public/yiyan.png';
-import gptAvatar from '../../../../public/ChatGPT.png';
+import gptAvatar from '../../../../public/chatgpt.png';
 import userAvatar from '../../../../public/user.png';
 
 interface Props {
