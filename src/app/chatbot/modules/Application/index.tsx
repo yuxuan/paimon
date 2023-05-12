@@ -3,11 +3,11 @@
 import {useState, useEffect} from 'react';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {Button} from 'antd';
+import styled from '@emotion/styled';
 import {Application, Conversation} from '@/shared/structure';
 import {getApplication, getConversationsByApplicationId} from '../../interfaces';
 import {ApplicationContextProvider} from './ApplicationContextProvider';
 import Conversations from './Conversations';
-import styled from '@emotion/styled';
 import Chat from './Chat';
 const SidebarContent = styled.div`
     height: calc(100vh - 100px);
@@ -72,7 +72,7 @@ export default function ApplicationPage({id}: {id: string}) {
             getApplication(id).then(application => setApplication(application));
             getConversationsByApplicationId(id).then(conversations => setconversations(conversations));
         },
-        []
+        [id]
     );
 
     return (

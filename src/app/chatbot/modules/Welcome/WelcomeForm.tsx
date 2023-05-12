@@ -14,7 +14,8 @@ export default function WelcomeForm() {
     const getApplicationsQuery = useQuery(['applications'], getApplications);
 
     const [isCreate, setIsCreate] = useState(false);
-    const [loading, {on: onLoading, off: offLoading}] = useBoolean(false);
+
+    const [loading, {on: onLoading}] = useBoolean(false);
 
     const selectOptions = getApplicationsQuery.data?.map(item => ({
         label: item.description,

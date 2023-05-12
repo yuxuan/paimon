@@ -80,7 +80,7 @@ export default function Conversations(props: Props) {
                 onSelect={handleSelect}
                 items={items}
                 selectedKeys={[conversationId || '']}
-                style={{backgroundColor: 'rgb(242, 243, 245)'}}
+                style={{backgroundColor: 'rgb(242, 243, 245)', border: 0}}
             />
         </>
     );

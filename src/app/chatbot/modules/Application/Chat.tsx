@@ -4,8 +4,9 @@ import React, {useCallback, useState} from 'react';
 import {Button, Input, Skeleton, Space} from 'antd';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useImmer} from 'use-immer';
-import {Message as TypeMessage, RoleConst} from '@/shared/structure';
 import {useBoolean} from 'huse';
+import {useBoolean} from 'huse';
+import {Message as TypeMessage, RoleConst} from '@/shared/structure';
 import {createConversation, createMessage, getMessagesByConversationId} from '../../interfaces';
 import Message from '../../components/Message';
 import {useApplicationContext} from './ApplicationContextProvider';
@@ -66,7 +67,7 @@ export default function Chat() {
                     conversationId: tmpConversationId!,
                     role: RoleConst.ASSISTANT,
                 };
-    
+
                 setMessages(messages => {
                     messages.push(newMessage, replyMessage);
                 });
@@ -84,7 +85,11 @@ export default function Chat() {
                 offThink();
             } catch (e) {
                 setMessages(messages => {
-                    messages.splice(messages.length - 1, 1, {content: '响应失败了呢...', role: RoleConst.ASSISTANT});
+                    messages.splice(messages.length - 1, 1, {
+                        content: '响应失败了呢...',
+                        role: RoleConst.ASSISTANT,
+                        conversationId: tmpConversationId!,
+                    });
                 });
                 console.error(e);
                 offThink();
@@ -98,12 +103,15 @@ export default function Chat() {
             inputValue, queryClient,
             setContextConversationId,
             setMessages,
+            offThink,
+            onThink,
         ]
     );
     const onChange = useCallback(
-        e => {
-            setInputValue(e.target.value)
-        }
+        (e: any) => {
+            setInputValue(e.target.value);
+        },
+        []
     );
     const displayStyle = getHistoryMessageQuery.isLoading ? 'hidden' : 'block';
 
