@@ -5,7 +5,6 @@ import {Button, Input, Skeleton, Space} from 'antd';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useImmer} from 'use-immer';
 import {useBoolean} from 'huse';
-import {useBoolean} from 'huse';
 import {Message as TypeMessage, RoleConst} from '@/shared/structure';
 import {createConversation, createMessage, getMessagesByConversationId} from '../../interfaces';
 import Message from '../../components/Message';
