@@ -1,10 +1,11 @@
 'use client';
 
 import React, {useCallback, useState} from 'react';
-import {Button, Input, Skeleton} from 'antd';
+import {Button, Input, Skeleton, Space} from 'antd';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useImmer} from 'use-immer';
 import {Message as TypeMessage, RoleConst} from '@/shared/structure';
+import {useBoolean} from 'huse';
 import {createConversation, createMessage, getMessagesByConversationId} from '../../interfaces';
 import Message from '../../components/Message';
 import {useApplicationContext} from './ApplicationContextProvider';
@@ -12,6 +13,7 @@ import {useApplicationContext} from './ApplicationContextProvider';
 export default function Chat() {
     const {application} = useApplicationContext();
     const {conversationId, setContextConversationId} = useApplicationContext();
+    const [thinking, {on: onThink, off: offThink}] = useBoolean(false);
     const [messages, setMessages] = useImmer<TypeMessage[]>([]);
     const [inputValue, setInputValue] = useState('');
 
@@ -34,7 +36,7 @@ export default function Chat() {
 
     const handleMessageSubmit = useCallback(
         async () => {
-
+            onThink();
             const message = inputValue;
 
             setInputValue('');
@@ -58,27 +60,35 @@ export default function Chat() {
                 conversationId: tmpConversationId!,
             };
 
-            setMessages(messages => {
-                messages.push(newMessage);
-            });
+            try {
+                const replyMessage = {
+                    content: '正在思考...',
+                    conversationId: tmpConversationId!,
+                    role: RoleConst.ASSISTANT,
+                };
+    
+                setMessages(messages => {
+                    messages.push(newMessage, replyMessage);
+                });
+                const replyResponse = await createMessageMutation.mutateAsync({
+                    content: message,
+                    conversationId: tmpConversationId!,
+                    role: RoleConst.USER,
+                    applicationType: application.type,
+                    applicationId: application.applicationId,
+                });
 
-            const replyResponse = await createMessageMutation.mutateAsync({
-                content: message,
-                conversationId: tmpConversationId!,
-                role: RoleConst.USER,
-                applicationType: application.type,
-                applicationId: application.applicationId,
-            });
-
-            const replyMessage = {
-                content: replyResponse.content,
-                conversationId: tmpConversationId!,
-                role: RoleConst.ASSISTANT,
-            };
-
-            setMessages(messages => {
-                messages.push(replyMessage);
-            });
+                setMessages(messages => {
+                    messages.splice(messages.length - 1, 1, {...replyMessage, content: replyResponse.content});
+                });
+                offThink();
+            } catch (e) {
+                setMessages(messages => {
+                    messages.splice(messages.length - 1, 1, {content: '响应失败了呢...', role: RoleConst.ASSISTANT});
+                });
+                console.error(e);
+                offThink();
+            }
         },
         [
             application,
@@ -90,25 +100,38 @@ export default function Chat() {
             setMessages,
         ]
     );
-
-    if (getHistoryMessageQuery.isLoading) {
-        return <Skeleton />;
-    }
+    const onChange = useCallback(
+        e => {
+            setInputValue(e.target.value)
+        }
+    );
+    const displayStyle = getHistoryMessageQuery.isLoading ? 'hidden' : 'block';
 
     return (
         <>
-            <div className="overflow-scroll max-h-[calc(100%_-_100px)] break-all">
-                {
-                    conversationId && messages.map((message, index) => {
-                        return (
-                            // eslint-disable-next-line react/no-array-index-key
-                            <Message key={index} message={message} applicationType={application.type} />
-                        );
-                    })
-                }
+            {getHistoryMessageQuery.isLoading && <Skeleton />}
+            <div className={displayStyle}>
+                <div className="overflow-y-auto h-[calc(100vh_-_206px)] break-all">
+                    {
+                        conversationId && messages.map((message, index) => {
+                            return (
+                                // eslint-disable-next-line react/no-array-index-key
+                                <Message key={index} message={message} applicationType={application.type} />
+                            );
+                        })
+                    }
+                </div>
+                <Space direction="vertical" size={10} className="w-full mt-[10px]">
+                    <Input.TextArea
+                        onChange={onChange}
+                        value={inputValue}
+                        disabled={thinking}
+                        placeholder={thinking ? '正在思考' : '回车或点击提交'}
+                        onPressEnter={handleMessageSubmit}
+                    />
+                    <Button htmlType="submit" onClick={handleMessageSubmit} type="primary">提交</Button>
+                </Space>
             </div>
-            <Input.TextArea onChange={e => setInputValue(e.target.value)} value={inputValue} />
-            <Button htmlType="submit" onClick={handleMessageSubmit}>提交</Button>
         </>
     );
 }

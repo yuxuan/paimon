@@ -7,13 +7,24 @@ import {Application, Conversation} from '@/shared/structure';
 import {getApplication, getConversationsByApplicationId} from '../../interfaces';
 import {ApplicationContextProvider} from './ApplicationContextProvider';
 import Conversations from './Conversations';
+import styled from '@emotion/styled';
 import Chat from './Chat';
-
+const SidebarContent = styled.div`
+    height: calc(100vh - 100px);
+    min-height: calc(100vh - 100px);
+    flex-basis: 250px;
+    background-color: rgb(242, 243, 245);
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    overflow: auto;
+    padding: 20px 10px;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 8px;
+`;
 function Sidebar({children}: {children: React.ReactNode}) {
     return (
-        <div className="h-[calc(100vh_-_100px)] min-h-[calc(100vh_-_100px)] bg-white w-1/5 overflow-auto">
+        <SidebarContent>
             {children}
-        </div>
+        </SidebarContent>
     );
 }
 
@@ -35,7 +46,7 @@ function ApplicationApp({application, conversations}: Props) {
             <ApplicationContextProvider application={application}>
                 <div className="flex">
                     <Button type="link" href="/chatbot">返回应用列表</Button>
-                    <p>{application.description}</p>
+                    <h3>{application.description}</h3>
                 </div>
                 <div className="flex gap-5 overflow-hidden">
                     <Sidebar>

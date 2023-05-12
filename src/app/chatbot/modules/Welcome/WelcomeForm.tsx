@@ -1,9 +1,10 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Button, Form, Select, Space} from 'antd';
+import {Button, Form, Select, Space, Spin} from 'antd';
 import {useRouter} from 'next/navigation';
 import {useQuery} from '@tanstack/react-query';
+import {useBoolean} from 'huse';
 import {Application} from '@/shared/structure';
 import {getApplications} from '../../interfaces';
 import {CreateApplication} from './CreateApplication';
@@ -13,6 +14,7 @@ export default function WelcomeForm() {
     const getApplicationsQuery = useQuery(['applications'], getApplications);
 
     const [isCreate, setIsCreate] = useState(false);
+    const [loading, {on: onLoading, off: offLoading}] = useBoolean(false);
 
     const selectOptions = getApplicationsQuery.data?.map(item => ({
         label: item.description,
@@ -24,6 +26,7 @@ export default function WelcomeForm() {
     const [form] = Form.useForm();
 
     const handleFinish = ({applicationId}: Application) => {
+        onLoading();
         route.push(`/chatbot/application/${applicationId}`);
     };
 
@@ -31,12 +34,13 @@ export default function WelcomeForm() {
         return <CreateApplication setIsCreate={setIsCreate} />;
     }
 
-    return (
+    return selectOptions ? (
         <Form
             name="welcomeForm"
             form={form}
             layout="vertical"
             onFinish={handleFinish}
+            initialValues={{applicationId: selectOptions?.[0]?.value}}
         >
             <Form.Item
                 name="applicationId"
@@ -47,7 +51,7 @@ export default function WelcomeForm() {
             </Form.Item>
             <Form.Item>
                 <Space>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={loading}>
                         前往
                     </Button>
                     <Button onClick={() => setIsCreate(true)}>
@@ -56,5 +60,5 @@ export default function WelcomeForm() {
                 </Space>
             </Form.Item>
         </Form>
-    );
+    ) : <Spin />;
 }

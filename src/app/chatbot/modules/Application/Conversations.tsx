@@ -75,12 +75,12 @@ export default function Conversations(props: Props) {
 
     return (
         <>
-            <Button onClick={() => setContextConversationId(null)}>新建对话</Button>
-
+            <Button onClick={() => setContextConversationId(null)} style={{marginLeft: 20}}>新建对话</Button>
             <Menu
                 onSelect={handleSelect}
                 items={items}
                 selectedKeys={[conversationId || '']}
+                style={{backgroundColor: 'rgb(242, 243, 245)'}}
             />
         </>
     );
