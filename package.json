@@ -39,6 +39,8 @@
     "use-immer": "^0.9.0"
   },
   "devDependencies": {
+    "@reskript/cli": "^5.7.4",
+    "@reskript/cli-lint": "^5.7.4",
     "@reskript/config-lint": "^5.7.4",
     "@reskript/core": "^5.7.4",
     "@swc/helpers": "^0.4.14",

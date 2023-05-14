@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import {Message as TypeMessage, ApplicationType} from '@/shared/structure';
-import CopyClipBoard from './CopyClipBoard';
 import {Tooltip} from 'antd';
 import styled from '@emotion/styled';
+import {Message as TypeMessage, ApplicationType} from '@/shared/structure';
 import yiyanAvatar from '../../../../public/yiyan.png';
 import gptAvatar from '../../../../public/chatgpt.png';
 import userAvatar from '../../../../public/user.png';
+import CopyClipBoard from './CopyClipBoard';
 
 interface Props {
     message: TypeMessage;

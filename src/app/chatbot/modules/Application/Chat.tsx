@@ -133,8 +133,7 @@ export default function Chat() {
                         onChange={onChange}
                         value={inputValue}
                         disabled={thinking}
-                        placeholder={thinking ? '正在思考' : '回车或点击提交'}
-                        onPressEnter={handleMessageSubmit}
+                        placeholder={thinking ? '正在思考' : '请输入问题'}
                     />
                     <Button htmlType="submit" onClick={handleMessageSubmit} type="primary">提交</Button>
                 </Space>
