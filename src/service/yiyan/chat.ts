@@ -1,6 +1,6 @@
 import {Message} from '@/shared/structure';
 
-const QIANFAN_URL = 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions';
+const QIANFAN_URL = 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant';
 
 export const chat = async ({token, messages}: {token: string, messages: Message[]}) => {
     const messagesSanitized = messages.map(({content, role}) => ({content, role: role.toLowerCase()}));

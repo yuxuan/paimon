@@ -5,10 +5,28 @@ import {Button, Input, Skeleton, Space} from 'antd';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useImmer} from 'use-immer';
 import {useBoolean} from 'huse';
-import {Message as TypeMessage, RoleConst} from '@/shared/structure';
+import {Message as TypeMessage, RoleConst, Application} from '@/shared/structure';
 import {createConversation, createMessage, getMessagesByConversationId} from '../../interfaces';
 import Message from '../../components/Message';
 import {useApplicationContext} from './ApplicationContextProvider';
+
+interface ThingkMessagePlaceholderProps {
+    conversationId: string;
+    application: Application;
+}
+
+const ThingkMessagePlaceholder = ({conversationId, application}: ThingkMessagePlaceholderProps) => {
+    return (
+        <Message
+            message={{
+                content: '正在思考...',
+                conversationId: conversationId,
+                role: RoleConst.ASSISTANT,
+            }}
+            applicationType={application.type}
+        />
+    );
+};
 
 export default function Chat() {
     const {application} = useApplicationContext();
@@ -68,8 +86,9 @@ export default function Chat() {
                 };
 
                 setMessages(messages => {
-                    messages.push(newMessage, replyMessage);
+                    messages.push(newMessage);
                 });
+
                 const replyResponse = await createMessageMutation.mutateAsync({
                     content: message,
                     conversationId: tmpConversationId!,
@@ -79,9 +98,8 @@ export default function Chat() {
                 });
 
                 setMessages(messages => {
-                    messages.splice(messages.length - 1, 1, {...replyMessage, content: replyResponse.content});
+                    messages.push({...replyMessage, content: replyResponse.content});
                 });
-                offThink();
             } catch (e) {
                 setMessages(messages => {
                     messages.splice(messages.length - 1, 1, {
@@ -91,6 +109,8 @@ export default function Chat() {
                     });
                 });
                 console.error(e);
+            }
+            finally {
                 offThink();
             }
         },
@@ -106,6 +126,7 @@ export default function Chat() {
             onThink,
         ]
     );
+
     const onChange = useCallback(
         (e: any) => {
             setInputValue(e.target.value);
@@ -126,6 +147,11 @@ export default function Chat() {
                                 <Message key={index} message={message} applicationType={application.type} />
                             );
                         })
+                    }
+                    {
+                        thinking ? (
+                            <ThingkMessagePlaceholder conversationId={conversationId!} application={application} />)
+                            : null
                     }
                 </div>
                 <Space direction="vertical" size={10} className="w-full mt-[10px]">

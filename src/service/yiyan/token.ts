@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 
-const QIANFAN_API_KEY = '9RFTfG9ZkUnYThzjhOpdCgXi';
-const QIANFAN_API_SECRET = 'FjCGDFvIMxI94LBr7NM1PAPvpyNf0Sh0';
+const QIANFAN_API_KEY = 'qNGzHNciu6ubGfZAvXFdEEBq';
+const QIANFAN_API_SECRET = 'u5FGNwqkNiswnx5lX0W7U44TiG9chlpY';
 
 export async function getYiyanToken() {
     const params = queryString.stringify({

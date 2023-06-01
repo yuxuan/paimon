@@ -2,13 +2,14 @@
 
 import {useState, useEffect} from 'react';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {Button} from 'antd';
 import styled from '@emotion/styled';
 import {Application, Conversation} from '@/shared/structure';
 import {getApplication, getConversationsByApplicationId} from '../../interfaces';
 import {ApplicationContextProvider} from './ApplicationContextProvider';
 import Conversations from './Conversations';
 import Chat from './Chat';
+import PageHeader from './PageHeader';
+import PageContent from './PageContent';
 const SidebarContent = styled.div`
     height: calc(100vh - 100px);
     min-height: calc(100vh - 100px);
@@ -44,11 +45,8 @@ function ApplicationApp({application, conversations}: Props) {
     return (
         <QueryClientProvider client={queryClient}>
             <ApplicationContextProvider application={application}>
-                <div className="flex">
-                    <Button type="link" href="/chatbot">返回应用列表</Button>
-                    <h3>{application.description}</h3>
-                </div>
-                <div className="flex gap-5 overflow-hidden">
+                <PageHeader title={application.description} />
+                <PageContent>
                     <Sidebar>
                         {
                             conversations.length > 0 ? <Conversations conversations={conversations} /> : <p>暂无会话</p>
@@ -57,7 +55,7 @@ function ApplicationApp({application, conversations}: Props) {
                     <div className="flex-1 overflow-hidden max-h-[calc(100vh_-_100px)]">
                         <Chat />
                     </div>
-                </div>
+                </PageContent>
             </ApplicationContextProvider>
         </QueryClientProvider>
     );

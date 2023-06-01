@@ -1,48 +1,19 @@
 'use client';
 
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {Menu, theme, GlobalToken, Button} from 'antd';
-import {DeleteOutlined} from '@ant-design/icons';
-import styled from '@emotion/styled';
+import {useQuery} from '@tanstack/react-query';
+import {Menu, Button} from 'antd';
 import {Conversation} from '@/shared/structure';
-import {getConversationsByApplicationId, deleteConversation} from '../../interfaces';
+import {getConversationsByApplicationId} from '../../interfaces';
 import {useApplicationContext} from './ApplicationContextProvider';
-
-const genRemoveIconWrapper = (token: GlobalToken) => styled.div`
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    :hover {
-        background-color: ${token.colorBgTextHover};
-    }
-`;
+import {ConversationItem} from './ConversationItem';
 
 interface Props {
     conversations: Conversation[];
 }
 
 export default function Conversations(props: Props) {
-    const {token} = theme.useToken();
-    const RemoveIconWrapper = genRemoveIconWrapper(token);
     const conversations = props.conversations;
     const {application, conversationId, setContextConversationId} = useApplicationContext();
-    const queryClient = useQueryClient();
-
-    const deleteConversationMutation = useMutation(
-        deleteConversation,
-        {
-            onSuccess() {
-                queryClient.invalidateQueries({queryKey: ['conversationList']});
-            },
-        });
-
-    const handleRemoveConversation = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, clickId: string) => {
-        e.stopPropagation();
-        deleteConversationMutation.mutate(clickId);
-    };
 
     const listConversations = useQuery(
         ['conversationList', application.applicationId],
@@ -52,17 +23,11 @@ export default function Conversations(props: Props) {
         }
     );
 
-    const items = listConversations.data?.map((conversation: Conversation) => {
+    const items = listConversations.data?.map((conversation: Conversation, index) => {
         return {
-            key: conversation.conversationId,
+            key: index,
             label: (
-                <div className="flex items-center">
-                    <div className="truncate">{conversation.prompt}</div>
-                    <RemoveIconWrapper onClick={e => handleRemoveConversation(e, conversation.conversationId)}>
-                        <DeleteOutlined />
-                    </RemoveIconWrapper>
-
-                </div>
+                <ConversationItem conversation={conversation} />
             ),
             value: conversation.conversationId,
         };

@@ -1,5 +1,6 @@
-FROM iregistry.baidu-int.com/ee-fe/base-node:18-alpine
-WORKDIR /app
+FROM iregistry.baidu-int.com/ee-fe/fcnap:20.1.0-alpine3.17-extra
+ENV TZ "Asia/Shanghai"
+ENV https_proxy http://proxy.npm.baidu-int.com:8269
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
 COPY package.json .
@@ -19,5 +20,5 @@ EXPOSE 8080
 # Uncomment the following line in case you want to disable telemetry.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["yarn", "start", "-p", "8080"]
+CMD ["pnpm", "start", "-p", "8080"]
 
