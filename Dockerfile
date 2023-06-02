@@ -6,6 +6,7 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 COPY package.json .
 COPY next.config.js .
 COPY ./public ./public
+COPY --chown=nextjs:nodejs ./.env.production ./.env.production
 COPY --chown=nextjs:nodejs ./node_modules ./node_modules
 COPY --chown=nextjs:nodejs ./.next ./.next
 
