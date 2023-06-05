@@ -23,9 +23,9 @@ export default function Conversations(props: Props) {
         }
     );
 
-    const items = listConversations.data?.map((conversation: Conversation, index) => {
+    const items = listConversations.data?.map((conversation: Conversation) => {
         return {
-            key: index,
+            key: conversation.conversationId,
             label: (
                 <ConversationItem conversation={conversation} />
             ),
