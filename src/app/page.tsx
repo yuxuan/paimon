@@ -6,6 +6,7 @@ export default function Home() {
         <main className={`${styles.main}`}>
             <div className={styles.description}>
                 <Link href="/chatbot">chatbot</Link>
+                <Link href="/langchain">langchain</Link>
             </div>
         </main>
     );

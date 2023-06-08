@@ -2,11 +2,11 @@
 
 import React, {useCallback, useState} from 'react';
 import {Button, Input, Skeleton, Space} from 'antd';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {useImmer} from 'use-immer';
 import {useBoolean} from 'huse';
 import {Message as TypeMessage, RoleConst, Application} from '@/shared/structure';
-import {createConversation, createMessage, getMessagesByConversationId} from '../../interfaces';
+import {createMessage, getMessagesByConversationId} from '../../interfaces';
 import Message from '../../components/Message';
 import {useApplicationContext} from './ApplicationContextProvider';
 
@@ -29,8 +29,7 @@ const ThingkMessagePlaceholder = ({conversationId, application}: ThingkMessagePl
 };
 
 export default function Chat() {
-    const {application} = useApplicationContext();
-    const {conversationId, setContextConversationId} = useApplicationContext();
+    const {application, conversationId} = useApplicationContext();
     const [thinking, {on: onThink, off: offThink}] = useBoolean(false);
     const [messages, setMessages] = useImmer<TypeMessage[]>([]);
     const [inputValue, setInputValue] = useState('');
@@ -40,17 +39,12 @@ export default function Chat() {
         () => getMessagesByConversationId(conversationId),
         {
             onSuccess(data) {
-                if (data.length) {
-                    setMessages(data);
-                }
+                setMessages(data);
             },
         }
     );
 
     const createMessageMutation = useMutation(createMessage);
-    const createConversationMutation = useMutation(createConversation);
-
-    const queryClient = useQueryClient();
 
     const handleMessageSubmit = useCallback(
         async () => {
@@ -59,29 +53,16 @@ export default function Chat() {
 
             setInputValue('');
 
-            let tmpConversationId = conversationId;
-
-            if (!tmpConversationId) {
-                const {conversationId} = await createConversationMutation.mutateAsync({
-                    prompt: message,
-                    applicationId: application.applicationId,
-                });
-
-                tmpConversationId = conversationId;
-                queryClient.invalidateQueries({queryKey: ['conversationList']});
-                setContextConversationId(tmpConversationId);
-            }
-
             const newMessage = {
                 content: message,
                 role: RoleConst.USER,
-                conversationId: tmpConversationId!,
+                conversationId: conversationId!,
             };
 
             try {
                 const replyMessage = {
                     content: '正在思考...',
-                    conversationId: tmpConversationId!,
+                    conversationId: conversationId!,
                     role: RoleConst.ASSISTANT,
                 };
 
@@ -91,7 +72,7 @@ export default function Chat() {
 
                 const replyResponse = await createMessageMutation.mutateAsync({
                     content: message,
-                    conversationId: tmpConversationId!,
+                    conversationId: conversationId!,
                     role: RoleConst.USER,
                     applicationType: application.type,
                     applicationId: application.applicationId,
@@ -105,7 +86,7 @@ export default function Chat() {
                     messages.splice(messages.length - 1, 1, {
                         content: '响应失败了呢...',
                         role: RoleConst.ASSISTANT,
-                        conversationId: tmpConversationId!,
+                        conversationId: conversationId!,
                     });
                 });
                 console.error(e);
@@ -114,17 +95,7 @@ export default function Chat() {
                 offThink();
             }
         },
-        [
-            application,
-            conversationId,
-            createConversationMutation,
-            createMessageMutation,
-            inputValue, queryClient,
-            setContextConversationId,
-            setMessages,
-            offThink,
-            onThink,
-        ]
+        [application, conversationId, createMessageMutation, inputValue, setMessages, offThink, onThink]
     );
 
     const onChange = useCallback(

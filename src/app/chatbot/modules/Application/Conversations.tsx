@@ -1,11 +1,12 @@
 'use client';
 
 import {useQuery} from '@tanstack/react-query';
-import {Menu, Button} from 'antd';
+import {Menu} from 'antd';
 import {Conversation} from '@/shared/structure';
 import {getConversationsByApplicationId} from '../../interfaces';
 import {useApplicationContext} from './ApplicationContextProvider';
 import {ConversationItem} from './ConversationItem';
+import NewConversationModalForm from './NewConversationModalForm';
 
 interface Props {
     conversations: Conversation[];
@@ -40,7 +41,7 @@ export default function Conversations(props: Props) {
 
     return (
         <>
-            <Button onClick={() => setContextConversationId(null)} style={{marginLeft: 20}}>新建对话</Button>
+            <NewConversationModalForm />
             <Menu
                 onSelect={handleSelect}
                 items={items}
